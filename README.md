@@ -21,3 +21,6 @@ For the following skills we need to modify the text related to deploy agents, an
 - `Arena` modify the models. Review and adapt the `run_in_background: true` for opencode.
 - `Swarm` modify the cloud agents for local agents.
 - `Interrogate` modify the models for review
+- `No Comments` need to define the subagent comment sicko.
+
+Review the possible to add `Thermo-Nuclear Code Quality Review` cursor kit skill.
