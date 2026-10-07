@@ -22,5 +22,7 @@ For the following skills we need to modify the text related to deploy agents, an
 - `Swarm` modify the cloud agents for local agents.
 - `Interrogate` modify the models for review
 - `No Comments` need to define the subagent comment sicko.
+- `Create-verification-skill` modify the save directory.
+- `Maintain-verification-skill` modify the save directory.
 
 Review the possible to add `Thermo-Nuclear Code Quality Review` cursor kit skill.
