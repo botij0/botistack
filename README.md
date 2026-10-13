@@ -26,3 +26,14 @@ For the following skills we need to modify the text related to deploy agents, an
 - `Maintain-verification-skill` modify the save directory.
 
 Review the possible to add `Thermo-Nuclear Code Quality Review` cursor kit skill.
+
+- `Boti-mode`:
+  - Add the `control-cli` and `control-ui` from `cursor-team-kit`.
+  - Change Subagents section.
+  - Personalize playbooks depending on the use.
+
+#### Playbooks
+
+- authoring a skill: remove cursor reference
+- bug-fix: model
+- feature: model
