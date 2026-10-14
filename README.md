@@ -37,3 +37,5 @@ Review the possible to add `Thermo-Nuclear Code Quality Review` cursor kit skill
 - authoring a skill: remove cursor reference
 - bug-fix: model
 - feature: model
+- perf-issue: model
+- session-pickup: transcriptions.
