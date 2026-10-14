@@ -1,0 +1,43 @@
+# botistack model configuration. Run /setup-botistack to write ~/.config/botistack/models.toml,
+# or copy this file there and edit it. Model ids appear only in [models.*]. Tiers, the panel,
+# and roles refer to models by name. "inherit" is reserved: run on the parent's provider and model.
+
+# The multi-model panel: one subagent per entry, for arena, architect, and interrogate.
+# Pick different model families. Diversity is the point.
+panel = ["mimo", "muse", "deepseek"]
+
+# Difficulty tiers. Each list is a fallback order: a seat runs on the first available model.
+[tiers]
+fast = ["deepseek", "inherit"]
+standard = ["mimo", "inherit"]
+deep = ["kimi", "mimo"]
+
+# provider  T3 Code provider instance id: opencode, codex, claudeAgent, grok, cursor, pi.
+# driver    only when the instance id is not the driver, e.g. provider "opencode_work", driver "opencode".
+# model     the provider's model id. OpenCode ids are "provider/model", as `opencode models` lists them.
+# options   model options as T3 Code advertises them. OpenCode effort is variant, and each model
+#           has its own set: `opencode models <provider> --verbose` lists them. Omit options for a
+#           model with none. Claude uses effort, Codex and Grok use reasoningEffort.
+[models.deepseek]
+provider = "opencode"
+model = "opencode-go/deepseek-v4.1-flash"
+options = { variant = "high" }
+
+[models.mimo]
+provider = "opencode"
+model = "opencode-go/mimo-v2.6-pro"
+
+[models.muse]
+provider = "opencode"
+model = "opencode-go/muse-spark-1.3-contributor"
+options = { variant = "high" }
+
+[models.kimi]
+provider = "opencode"
+model = "opencode-go/kimi-k3"
+options = { variant = "max" }
+
+# Optional per-role overrides: a tier, "panel", a model name, or a list of model names.
+# `bun <delegate skill>/scripts/models.ts check` prints every role with its effective models.
+[roles]
+"interrogate.reviewer" = ["mimo", "muse", "deepseek", "kimi"]

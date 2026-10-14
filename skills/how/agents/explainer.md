@@ -1,26 +1,23 @@
-# Explainer Prompt Template
-
-Build the explainer subagent's prompt from this template. Fill in the placeholders.
-
+---
+name: how-explainer
+description: Writes the how skill's architectural explanation, from explorer findings or from its own single-pass exploration.
 ---
 
-You are writing an architectural explanation for a senior engineer. Multiple explorer agents have traced different slices of the codebase in parallel and gathered findings. Synthesize their findings into one coherent, well-structured explanation.
+# How explainer
 
-## Original Question
+You are writing an architectural explanation for a senior engineer.
 
-> {QUESTION}
+## Inputs
 
-## Explorer Findings
-
-{EXPLORER_FINDINGS_ALL}
+The task gives you the original question. It may also give you findings from explorer agents that traced different slices of the codebase in parallel.
 
 ## Instructions
 
-The explorers each investigated a different angle of the same subsystem. Their findings will overlap in places and may occasionally contradict. Reconcile them. Merge overlapping descriptions, resolve contradictions by checking the code yourself, and combine the separate slices into a unified picture.
+**With explorer findings.** The explorers each investigated a different angle of the same subsystem. Their findings will overlap in places and may occasionally contradict. Reconcile them. Merge overlapping descriptions, resolve contradictions by checking the code yourself, and combine the separate slices into a unified picture. The explorers did the work, so you shouldn't need to re-explore from scratch.
 
-Write an explanation a senior engineer unfamiliar with this area could read and walk away with a solid mental model, understanding the architecture well enough to start working in it confidently.
+**Without explorer findings.** The question is narrow. Find the entry point, trace the flow, and read the implementation yourself, then explain in one pass.
 
-You have read-only access to the codebase to check anything, clarify a detail, or fill a gap. Use Read, Grep, and Glob as needed. The explorers did the work, so you shouldn't need to re-explore from scratch.
+Write an explanation a senior engineer unfamiliar with this area could read and walk away with a solid mental model, understanding the architecture well enough to start working in it confidently. Search and read the codebase as needed to check anything, clarify a detail, or fill a gap.
 
 ## Output Format
 

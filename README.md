@@ -1,41 +1,66 @@
 # botistack
 
-Adaptation of Cursor's pstack plugin made by Lauren Tan's to my own needs.
+Adaptation of Cursor's pstack plugin made by Lauren Tan to my own needs. Harness-agnostic, built first for T3 Code, and compatible with OpenCode.
 
-Compatible with OpenCode.
+## Install
 
-## Modifications depending on agents:
+Symlink or copy every folder in `skills/` into one skills directory. `~/.agents/skills/` works for OpenCode and Cursor. Keep them together, because the delegate script finds each role's agent file relative to its own location.
 
-For the following skills we need to modify the text related to deploy agents, and just create the agents in Opencode folder with the corresponding behaviour and the model selected.
+```bash
+for skill in skills/*/; do ln -sfn "$PWD/$skill" ~/.agents/skills/; done
+```
 
-- `How` skill. We should create two opencode agents with the behaviour defined in the `references/` folder:
-  - Explainer agent.
-  - Explorer agent.
-- `Why` skill. Same as `How` skill:
-  - Epistemics don't need to be in a agent, is an extra context.
-  - Investigator agent.
-  - Synthetizer Agent.
-  - Source-playbook needs to be adapted to the different sources we use (shorcut for example in Th, Google Docs...). Inside the folder `sources` paste code to handle each source playbook just like in the example.
-- `Architext` modify the models. Review the concept of "stay in the loop"
-  - The prompt for arena agents should be an agent.
-- `Arena` modify the models. Review and adapt the `run_in_background: true` for opencode.
-- `Swarm` modify the cloud agents for local agents.
-- `Interrogate` modify the models for review
-- `No Comments` need to define the subagent comment sicko.
+Then run `/setup-botistack` to choose models. It needs [Bun](https://bun.sh).
+
+## Models
+
+Skills never name a model. Each subagent spawn names a **role**, and one config file maps roles to models, so a new model is a one-line edit.
+
+`~/.config/botistack/models.toml` has four parts. `skills/delegate/models.example.toml` documents the format.
+
+- `[models.<name>]` holds the provider, model id, and options such as effort. Model ids live only here.
+- `[tiers]` maps `fast`, `standard`, and `deep` to a fallback list of model names. Code delegates pick a tier by difficulty, per the **delegate** skill's tier guide.
+- `panel` lists the models for multi-model work. Arena, architect, interrogate, and swarm races spawn one subagent per entry.
+- `[roles]` overrides any role, e.g. a bigger interrogate panel or a cheaper how explorer.
+
+`inherit` in any list means the parent's model. With no config file, every role inherits.
+
+```bash
+cd skills/delegate
+bun scripts/models.ts check    # every role with its models, and any config errors
+bun scripts/models.ts sync     # regenerate the OpenCode agents
+bun test                       # the script's tests
+```
+
+When a model changes, edit its `[models.*]` entry, then run `check` and `sync`.
+
+## How spawning works
+
+The **delegate** skill picks the first backend available.
+
+1. **T3 Code orchestrator.** `delegate_task` on the `t3-code` MCP server runs each seat on its configured provider and model, with worktree isolation for parallel writers. It needs Orchestrator V2, T3 Code 0.0.46 nightly or later.
+2. **OpenCode agents.** OpenCode's `task` tool cannot choose a model per call, so `sync` writes one `boti-*.md` agent per seat into `~/.config/opencode/agents/`, with the model, effort, instructions, and read-only permission baked in. It only removes agents it generated.
+3. **The harness's own subagent tool** with the role's instructions, on the parent's model.
+4. **Inline**, when there is no subagent tool.
+
+Role instructions live with their skill, in `skills/<skill>/agents/`.
+
+## Pending
+
+Done: how and why agents, architect runner agent, arena and swarm on local subagents, interrogate and no-comments roles, the Comment Sicko agent, the boti-mode Subagents section, and the model choices in the bug-fix, feature, perf-issue, refactoring, hillclimb, and multi-phase-plan playbooks.
+
+- `Why` skill. The source playbooks need adapting to the sources we use (Shortcut, Google Docs...). Inside `references/sources/`, add one playbook per source just like the examples. `source-playbook.md` still points at example files that don't exist.
+- `Architect`. Review the concept of "stay in the loop".
 - `Create-verification-skill` modify the save directory.
 - `Maintain-verification-skill` modify the save directory.
 
-Review the possible to add `Thermo-Nuclear Code Quality Review` cursor kit skill.
+Review the possibility of adding the `Thermo-Nuclear Code Quality Review` skill from cursor-team-kit.
 
 - `Boti-mode`:
   - Add the `control-cli` and `control-ui` from `cursor-team-kit`.
-  - Change Subagents section.
-  - Personalize playbooks depending on the use.
+  - Personalize playbooks depending on the use. Orchestrate and the autopilot playbooks still assume Cursor cloud agents and pstack paths.
 
 #### Playbooks
 
 - authoring a skill: remove cursor reference
-- bug-fix: model
-- feature: model
-- perf-issue: model
 - session-pickup: transcriptions.
