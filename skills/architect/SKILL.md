@@ -50,9 +50,20 @@ If the human pushes back on the shape (in a checkpoint or after the fact), treat
 
 ## Phase D: Implement against the sketch
 
-Replace `not implemented` bodies with code, pseudocode with logic. The synthesized sketch is the contract.
+Replace `not implemented` bodies with code, pseudocode with logic. The synthesized sketch is the contract, and you stay its owner while the bodies fill in, whether you write them or delegates do.
+
+1. Commit the sketch, so each delegate's worktree starts from it.
+2. Split the fill-in along the sketch's module boundaries. Delegate per the **delegate** skill. A body whose signature, types, and pseudocode leave one obvious implementation runs on `fast`. A body with open logic runs on `standard`, or `deep` when it carries a hard invariant. A sketch small enough to fill in faster than to brief, fill in yourself.
+3. Every brief carries the sketch files, the rationale's Shape section, and one rule. Do not change a public type or signature. When the sketch does not fit, stop and report what was needed, where, and why instead of working around it.
+4. Review each returned diff against the sketch before you merge it. Signatures match, no new escape hatches (`any`, casts, optional fields always set in practice), and no shared state the sketch said was not shared.
 
 Deviations from the sketch are signal worth surfacing, not friction to absorb silently. If a function needs a parameter the sketch didn't anticipate, ask whether the sketch was wrong, the requirement was missed, or the implementation is overreaching.
+
+- **Sketch wrong.** Update the sketch and the rationale first, then re-brief the bodies it touches.
+- **Requirement missed.** Return to Phase A for that requirement, and to Phase B when it changes the shape.
+- **Overreach.** Reject the change and re-brief with the boundary stated.
+
+Log each one in the rationale's Deviations section. Phase E reads that log.
 
 ## Phase E: Scrap when the architecture is wrong
 
@@ -65,7 +76,7 @@ The signal is a _pattern_, not single instances. Tells:
 - Types that need escape hatches (`any`, casts, optional fields always set in practice) to compile.
 - The "we need a lock" reflex when the sketch said the state wasn't shared.
 - Callers having to know the abstraction's internal rules to use it.
-- Two or more independent Phase D deviations of the same shape across the implementation.
+- Two or more independent entries of the same shape in the rationale's Deviations log.
 
 Use judgment. A few edge cases don't condemn an architecture. Some problems are legitimately complex. Complexity in the data is not complexity in the design.
 

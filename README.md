@@ -45,20 +45,19 @@ The **delegate** skill picks the first backend available.
 
 Role instructions live with their skill, in `skills/<skill>/agents/`.
 
+Long programs (orchestrate, both autopilots, and multi-phase plans) run in full on T3 Code with Orchestrator V2, which gives async owners, a scheduled 30-minute audit tick, and restart recovery. Without it they run in waves, one blocking batch of children at a time. `skills/boti-mode/references/program-runtime.md` has the details.
+
+## Checks
+
+`bun skills/boti-mode/scripts/check-skills.ts` validates every skill's frontmatter, relative links, referenced paths, and bold skill names. Pass skill names to check only those.
+
 ## Pending
 
-Done: how and why agents, architect runner agent, arena and swarm on local subagents, interrogate and no-comments roles, the Comment Sicko agent, the boti-mode Subagents section, and the model choices in the bug-fix, feature, perf-issue, refactoring, hillclimb, and multi-phase-plan playbooks.
+Done: how and why agents, architect runner agent, arena and swarm on local subagents, interrogate and no-comments roles, the Comment Sicko agent, the boti-mode Subagents section, the model choices in the bug-fix, feature, perf-issue, refactoring, hillclimb, and multi-phase-plan playbooks, architect's delegated fill-in with a deviations log, local program runtime for orchestrate, the autopilots, shipping, and multi-phase plans, skill format rules and checks for authoring a skill, and T3 and OpenCode transcripts for session pickup, eval, recall, and show-me-your-work.
 
 - `Why` skill. The source playbooks need adapting to the sources we use (Shortcut, Google Docs...). Inside `references/sources/`, add one playbook per source just like the examples. `source-playbook.md` still points at example files that don't exist.
-- `Architect`. Review the concept of "stay in the loop".
-
-Review the possibility of adding the `Thermo-Nuclear Code Quality Review` skill from cursor-team-kit.
 
 - `Boti-mode`:
-  - Add the `control-cli` and `control-ui` from `cursor-team-kit`.
-  - Personalize playbooks depending on the use. Orchestrate and the autopilot playbooks still assume Cursor cloud agents and pstack paths.
-
-#### Playbooks
-
-- authoring a skill: remove cursor reference
-- session-pickup: transcriptions.
+  - `/loop` is Cursor's command. Autonomous-run, babysit, bug-fix, and visual-parity still name it. `references/program-runtime.md` covers the wake they need.
+  - Worktree cleanup. `scripts/worktree-audit.sh` reads Cursor's transcript dir and uses macOS-only `stat -f` and `date -r`. The playbook's cache step names Cursor's app data.
+  - Bugbot is Cursor's reviewer. Babysit, the autopilots, and `references/bugbot-triage.md` assume it, and `watch-pr` counts its passes.

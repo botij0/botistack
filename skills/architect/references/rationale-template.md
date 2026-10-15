@@ -32,4 +32,8 @@ _Things you noticed during the sketch that the human needs to weigh in on, and r
 
 ## Next implementation step
 
-_The first thing to build against the sketch. One sentence. What you'd start writing immediately after synthesis (or after Phase D sign-off, if a checkpoint was opted into)._
+_The first thing to build against the sketch. One sentence. What you'd start writing immediately after synthesis (or after Phase C sign-off, if a checkpoint was opted into)._
+
+## Deviations
+
+_Filled in during [Phase D](../SKILL.md#phase-d-implement-against-the-sketch). One line per deviation from the sketch. Name where it surfaced, its class (sketch wrong, requirement missed, or overreach), and how it was resolved. Two or more of the same shape are a [Phase E](../SKILL.md#phase-e-scrap-when-the-architecture-is-wrong) tell. Leave it empty at synthesis._
