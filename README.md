@@ -51,8 +51,6 @@ Done: how and why agents, architect runner agent, arena and swarm on local subag
 
 - `Why` skill. The source playbooks need adapting to the sources we use (Shortcut, Google Docs...). Inside `references/sources/`, add one playbook per source just like the examples. `source-playbook.md` still points at example files that don't exist.
 - `Architect`. Review the concept of "stay in the loop".
-- `Create-verification-skill` modify the save directory.
-- `Maintain-verification-skill` modify the save directory.
 
 Review the possibility of adding the `Thermo-Nuclear Code Quality Review` skill from cursor-team-kit.
 
