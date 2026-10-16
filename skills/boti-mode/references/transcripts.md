@@ -12,7 +12,7 @@ A thread link looks like `[title](t3-thread://v1/<threadId>)`. Without one, find
 
 `opencode session list --format json -n 20` lists this project's sessions with `id`, `title`, and `updated`, newest first. Run it from the repo, because the list is scoped to the directory's project. `opencode run --continue` and `--session <id>` resume a session. They do not read it.
 
-`opencode export <id> > <file>.json` writes the full session. Redirect to a file, because a pipe truncates it. The file holds `info` (title, directory, model, and time) and `messages`. Each message has `info.role` and `parts`, where a part is `text`, `reasoning`, or `tool`. A `tool` part names the `tool` and carries `state.input`, `state.output`, and `state.status`. A subagent ran in its own session. Find its id at `state.metadata.sessionId` on the parent's `task` part, and export that session too.
+`opencode session export <id> > <file>.json` writes the full session. Redirect to a file, because a pipe truncates it. The file holds `info` (title, model, time, and `location.directory`) and `messages`. A message's `type` is its role, one of `user`, `assistant`, or `system`. An assistant message carries `content`. A content part is `text`, `reasoning`, or `tool`. A `tool` part names the tool in `name` and carries `state.input`, `state.content`, and `state.status`. A part named `subagent` is a child session. Read the `sessionID` in that part's result, then export that session too.
 
 ## Reading one
 

@@ -14,7 +14,7 @@ Write `~/.config/botistack/models.toml`, the only place botistack names models. 
 Use the first source that works, and merge in the others when they add providers.
 
 - **T3 Code.** Call `orchestrator_capabilities` on the `t3-code` MCP server. Keep only provider instances that can run child tasks. Record each instance id, its model ids, and the option ids and values each model advertises, such as `variant`, `effort`, or `reasoningEffort`.
-- **OpenCode.** Run `opencode models <provider> --verbose`. Each `provider/model` line is a model id for provider `opencode`, and the JSON after it lists the model's `variants`, its effort levels. Variants differ per model, and some models have none. It may need network access.
+- **OpenCode.** Run `opencode models`. Each line is a `provider/model` id. The command does not list effort levels. When T3 is available, take those from `orchestrator_capabilities`. Otherwise ask the user which variant the model offers, and omit `options` when they don't name one. It may need network access.
 - **The user.** Ask them to paste the model ids they can use.
 
 Never write a model id you have not confirmed is available.

@@ -38,14 +38,14 @@ When a model changes, edit its `[models.*]` entry, then run `check` and `sync`.
 
 The **delegate** skill picks the first backend available.
 
-1. **T3 Code orchestrator.** `delegate_task` on the `t3-code` MCP server runs each seat on its configured provider and model, with worktree isolation for parallel writers. It needs Orchestrator V2, T3 Code 0.0.46 nightly or later.
-2. **OpenCode agents.** OpenCode's `task` tool cannot choose a model per call, so `sync` writes one `boti-*.md` agent per seat into `~/.config/opencode/agents/`, with the model, effort, instructions, and read-only permission baked in. It only removes agents it generated.
+1. **T3 Code orchestrator.** `delegate_task` on the `t3-code` MCP server runs each seat on its configured provider and model, with worktree isolation for parallel writers. It needs T3 Code 0.1.0 or later, where Orchestrator V2 is stable. A delegated child thread is read-only, so the next stage is a new `delegate_task`.
+2. **OpenCode agents.** OpenCode's `subagent` tool cannot choose a model per call, so `sync` writes one `boti-*.md` agent per seat into `~/.config/opencode/agents/`, with the model, effort, instructions, and read-only permission baked in. It only removes agents it generated. Pass the call's `sessionID` to continue that child.
 3. **The harness's own subagent tool** with the role's instructions, on the parent's model.
 4. **Inline**, when there is no subagent tool.
 
 Role instructions live with their skill, in `skills/<skill>/agents/`.
 
-Long programs (orchestrate, both autopilots, and multi-phase plans) run in full on T3 Code with Orchestrator V2, which gives async owners, a scheduled 30-minute audit tick, and restart recovery. Without it they run in waves, one blocking batch of children at a time. `skills/boti-mode/references/program-runtime.md` has the details.
+Long programs (orchestrate, both autopilots, and multi-phase plans) run in full on T3 Code 0.1.0 or later, which gives async owners, a scheduled 30-minute audit tick, and restart recovery. OpenCode 2 can background children and hears when they finish, but it has no clock tick. A harness whose subagent call blocks runs in waves. `skills/boti-mode/references/program-runtime.md` has the details.
 
 ## Checks
 

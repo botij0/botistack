@@ -29,7 +29,7 @@ Use the first that applies, and use it for every seat in the step.
 
 1. **T3 Code orchestrator.** The `t3-code` MCP server exposes `delegate_task`. Runs any chain model on any provider, with worktree isolation and async completion.
 2. **OpenCode, generated agent.** You run in OpenCode and the seat's `opencode` field is set. The agent has the model and instructions baked in.
-3. **Native subagent tool.** OpenCode's `task` with `subagent_type: general`, or the harness's equivalent. Runs on the parent's model unless the tool takes a model from the chain.
+3. **Native subagent tool.** OpenCode's `subagent` tool with `agent` set to `general`, or the harness's equivalent. Runs on the parent's model unless the tool takes a model from the chain.
 4. **Inline.** No subagent tool. Do each seat's work yourself, one at a time.
 
 Say in your report when a seat ran on a fallback: a later chain model, the parent's model, or inline. A panel whose seats collapse onto one model loses its independent views, and the reader needs to know.
@@ -46,9 +46,9 @@ Say in your report when a seat ran on a fallback: a later chain model, the paren
 - `mode: "wait"` when a single seat's result gates your next step. For a fan-out, launch every seat with `mode: "async"` in one turn and end the turn. Each completion wakes you. Read every `taskId` with `task_status` and continue once all are terminal.
 - A second review round is a new `delegate_task` with the original brief, the prior findings, and the responses. Don't reuse the child thread.
 
-**OpenCode, generated agent.** `task` with `subagent_type` set to the `opencode` name and the inputs as the prompt. The agent already carries the brief. Put every seat's `task` call in one message so they run in parallel.
+**OpenCode, generated agent.** Call the `subagent` tool. `agent` is the `opencode` name. `description` is a short label. `prompt` is this step's inputs. The agent already carries the brief. `background: true` returns immediately and notifies you when the child finishes. The call returns a `sessionID`. Pass it back as `sessionID` to continue that same child. Put every seat's call in one message so they run together. OpenCode's default nesting depth is one, so a generated agent cannot spawn its own children.
 
-**Native subagent tool.** The `brief` output plus `## Inputs` as the prompt, in one message for parallel seats.
+**Native subagent tool.** The `brief` output plus `## Inputs` as the prompt, in one message for parallel seats. On OpenCode that is the same `subagent` call with `agent` set to `general`.
 
 **Writers on the same checkout.** Outside T3 isolation, give each writing seat its own `git worktree add` path and branch, and pass the path as an input, per the **separate-before-serializing-shared-state** principle skill. Seats commit in their worktree and report the branch.
 

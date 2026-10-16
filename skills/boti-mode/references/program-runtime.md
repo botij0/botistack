@@ -4,15 +4,17 @@ Long programs (Orchestrate, Autopilot-full, Autopilot-stack, Shipping, and multi
 
 ## Pick the mode
 
-**T3 Code with Orchestrator V2** (0.0.46 nightly or later, where the `t3-code` MCP server exposes `delegate_task` and `schedule_task`) runs a program in full. Use it whenever it is available.
+**T3 Code 0.1.0 or later** runs a program in full. Its `t3-code` MCP server exposes `delegate_task` and `schedule_task`. Use it whenever it is available.
 
-**Without it** (OpenCode alone, or T3 Code 0.0.45), subagent calls block the root until they return. Run the program in **waves**. Spawn one wave of children in one message, then audit, drain, and decide between waves. There are no mid-wave probes and no self-wake, so timebox every brief and keep waves small. A stuck child stalls its wave. Say in the framing that the program runs in waves.
+**OpenCode 2 without T3** can background its children, and a finished child notifies the root. It cannot wake the root on a clock, so there is no 30-minute tick. Audit when a child finishes. A child cannot spawn its own children.
+
+**A harness whose subagent call blocks** until the child returns runs in **waves**. Spawn one wave of children in one message, then audit, drain, and decide between waves. There are no mid-wave probes and no self-wake, so timebox every brief and keep waves small. A stuck child stalls its wave. Say in the framing that the program runs in waves.
 
 ## Children
 
-Spawn every child per the **delegate** skill. Writers get their own worktree. On T3 that is `isolation: "worktree"`, which starts from your last commit, so commit what children must see first. Launch with `mode: "async"`. A child can delegate its own children. Each completion wakes the root, so end the turn after spawning instead of polling.
+Spawn every child per the **delegate** skill. Writers get their own worktree. On T3 that is `isolation: "worktree"`, which starts from your last commit, so commit what children must see first. Launch with `mode: "async"`. On T3, a child can delegate its own children. Each completion wakes the root, so end the turn after spawning instead of polling.
 
-To give an owner its next stage, message it rather than respawn it. A review round still gets a fresh child, per the delegate skill. On T3, call `t3_thread_send` with the child's `childThreadId`, which returns a fresh `taskId` to track. On OpenCode, pass the child's returned `task_id` back to the `task` tool, which resumes that session with its history.
+To give an owner its next stage, continue that owner. On OpenCode, call `subagent` again with the `sessionID` the first call returned. On T3, a delegated child thread is read-only, so `t3_thread_send` to its `childThreadId` does not continue it. Start the next stage with a new `delegate_task` that carries the stored brief and the previous stage's result, and track the new `taskId`. A review round is a fresh child either way, per the delegate skill.
 
 Children never read the program dir. Their briefs carry what they need, pasted in full, or point at repo paths.
 

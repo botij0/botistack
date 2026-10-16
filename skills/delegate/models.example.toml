@@ -16,7 +16,8 @@ deep = ["kimi", "mimo"]
 # driver    only when the instance id is not the driver, e.g. provider "opencode_work", driver "opencode".
 # model     the provider's model id. OpenCode ids are "provider/model", as `opencode models` lists them.
 # options   model options as T3 Code advertises them. OpenCode effort is variant, and each model
-#           has its own set: `opencode models <provider> --verbose` lists them. Omit options for a
+#           has its own set. `opencode models` lists ids only. Take variants from T3's
+#           orchestrator_capabilities, or ask the user. Omit options for a
 #           model with none. Claude uses effort, Codex and Grok use reasoningEffort.
 [models.deepseek]
 provider = "opencode"
